@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./App.css";
+import { motion } from "framer-motion";
 
 const ContactForm = () => {
   const [formData, setFormData] = useState({
@@ -167,6 +168,19 @@ const Home = () => {
       console.error("Error fetching projects", err);
     }
   };
+  const containerVariants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.2,
+      },
+    },
+  };
+
+  const cardVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: { opacity: 1, y: 0 },
+  };
 
   return (
     <div className="d-flex flex-column min-vh-100 bg-light text-dark">
@@ -219,8 +233,13 @@ const Home = () => {
       >
         <div className="container">
           <div className="row align-items-center">
-            {/* Left Column - Profile */}
-            <div className="col-md-4 text-center mb-4 mb-md-0">
+            {/* Profile Image */}
+            <motion.div
+              className="col-md-4 text-center mb-4 mb-md-0"
+              initial={{ y: -300, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ type: "spring", stiffness: 60, damping: 10 }}
+            >
               <img
                 src="/src/assets/my-photo.png"
                 alt="Avatar"
@@ -242,10 +261,15 @@ const Home = () => {
               <p className="fw-bold text-uppercase">
                 Fullstack Engineer | AI Enthusiast
               </p>
-            </div>
+            </motion.div>
 
-            {/* Right Column - About */}
-            <div className="col-md-8">
+            {/* About Text */}
+            <motion.div
+              className="col-md-8"
+              initial={{ x: 300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
               <h1 className="fw-bold display-5 mb-4 border-bottom pb-2">
                 About Me
               </h1>
@@ -264,22 +288,31 @@ const Home = () => {
               <a href="#contact" className="btn btn-outline-light mt-3">
                 Contact Me
               </a>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* Projects Section */}
-      <section
+      <motion.section
         id="projects"
-        className=" py-5 projects-gradient-bg"
+        className="py-5 projects-gradient-bg"
         style={{ backgroundColor: "#FFF1E6" }}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.1 }}
+        variants={containerVariants}
       >
         <div className="container">
           <h3 className="text-center fw-bold mb-4">Projects</h3>
           <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
             {projects.map((project) => (
-              <div className="col" key={project.id}>
+              <motion.div
+                className="col"
+                key={project.id}
+                variants={cardVariants}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+              >
                 <div className="card h-100 shadow border-0">
                   <img
                     src={project.image_url}
@@ -320,11 +353,11 @@ const Home = () => {
                     </a>
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
       {/* footer Section */}
       <footer id="contact" className="projects-gradient-bg bg-dark text-white">
